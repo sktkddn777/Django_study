@@ -1,5 +1,7 @@
 # Django_study
 Django공부를 해봅시당
+## DB
+Database는 postgreSQL을 사용
 
 
 # 공부 자료
