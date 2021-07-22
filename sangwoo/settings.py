@@ -82,7 +82,16 @@ DATABASES = {
         'USER': 'user1',
         'PASSWORD': '1111',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
+        # 'ENGINE': 'djongo',
+        # 'ENFORCE_SCHEMA': True,
+        # 'NAME': 'django_mongodb_docker',
+        # 'HOST': 'mongodb',
+        # 'PORT': 27017,
+        # 'USER': 'root',
+        # 'PASSWORD': 'mongoadmin',
+        # 'AUTH_SOURCE': 'admin',
+        # 'AUTH_MECHANISM': 'SCRAM-SHA-1',
     }
 }
 

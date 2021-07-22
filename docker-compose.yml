@@ -1,19 +1,25 @@
 version: '3'
+volumes:
+    mongodb-data:
+        name: mongodb-data
+
+networks:
+    mongodb_network:
+        name: mongodb_network
+
 
 services:
-    mongo:
-        image: mongo
-        restart: always
-        environment:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example 
-
-
-    polls:
-        build:
-            context .
+    mongodb:
+        image: 2d38962b1e5e
+        restart: unless-stopped
+        container_name: sangwoo-mongo
         ports:
-            - "8000:8000"
+            - "27017:27017"
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: sangwoo
+          MONGO_INITDB_ROOT_PASSWORD: password
         volumes:
-            # - ./app:/app
-        
+            - mongodb-data:/data/db
+        networks:
+            - mongodb_network
+    
