@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'sangwoo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sangwoo',
-        'USER': 'user1',
-        'PASSWORD': '1111',
-        'HOST': 'localhost',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
         'PORT': '5432',
         # 'ENGINE': 'djongo',
         # 'ENFORCE_SCHEMA': True,
