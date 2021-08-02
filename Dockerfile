@@ -4,3 +4,6 @@ WORKDIR /django
 COPY requirements.txt /django/
 RUN pip3 install -r requirements.txt
 COPY . /django/
+
+EXPOSE 8000
+CMD [ "python", "manage.py", "runserver" ]
