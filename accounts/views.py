@@ -14,7 +14,8 @@ from json.decoder import JSONDecodeError
 state = getattr(settings, 'STATE')
 
 BASE_URL = 'http://localhost:8000/'
-GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
+GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback'
+KAKAO_CALLBACK_URI = BASE_URL + 'accounts/kakao/callback/'
 
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
@@ -45,7 +46,6 @@ def google_callback(request):
 
     try:
         user = User.objects.get(email=email)
-
         social_user = SocialAccount.objects.get(user=user)
         if social_user is None:
             return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -77,3 +77,33 @@ class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
+
+def kakao_login(request):
+    rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
+    return redirect(
+        f"https://kauth.kakao.com/oauth/authorize?client_id={rest_api_key}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
+    )
+    
+def kakao_callback(request):
+    rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
+    code = request.GET.get("code")
+    redirect_uri = KAKAO_CALLBACK_URI
+    token_req = requests.get(
+        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}")
+    token_req_json = token_req.json()
+    error = token_req_json.get("error")
+    if error is not None:
+        raise JSONDecodeError(error)
+
+    access_token = token_req_json.get("access_token")
+    """
+    Email Request
+    """
+    profile_request = requests.get(
+        "https://kapi.kakao.com/v2/user/me", headers={"Authorization": f"Bearer {access_token}"})
+    profile_json = profile_request.json()
+    error = profile_json.get("error")
+    if error is not None:
+        raise JSONDecodeError(error)
+    kakao_account = profile_json.get('kakao_account')
+    print(kakao_account)
